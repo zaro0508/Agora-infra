@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Essentials for Agora
+Parameters:
+  DNSDomainName:
+    Description: DNS Domain name for app
+    Type: String
+    Default: 'ampadportal.org'
+Resources:
+  BeanstalkApplication:
+    Type: 'AWS::ElasticBeanstalk::Application'
+    Properties:
+      ApplicationName: agora-ampad
+  HostedZone:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      HostedZoneConfig:
+        Comment: "Agora hosted zone"
+      Name: !Ref DNSDomainName
+      VPCs:
+        -
+          VPCId: !ImportValue us-east-1-computevpc-VPCId
+          VPCRegion: !Ref AWS::Region
+  SSLCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DNSDomainName
+      DomainValidationOptions:
+      - DomainName: !Ref DNSDomainName
+        ValidationDomain: !Ref DNSDomainName
+Outputs:
+  BeanstalkAppName:
+    Value: !Ref BeanstalkApplication
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkAppName'
+  HostedZone:
+    Value: !Ref HostedZone
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-HostedZone'
+  SSLCertificate:
+    Value: !Ref SSLCertificate
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-SSLCertificate'
+  DNSDomainName:
+    Value: !Ref DNSDomainName
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-DNSDomainName'
