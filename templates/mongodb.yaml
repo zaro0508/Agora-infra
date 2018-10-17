@@ -516,18 +516,26 @@ Outputs:
       - PrimaryReplicaNode0
       - Outputs.NodePrivateIp
     Description: Private IP Address of Primary Replica Node
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-PrimaryReplicaNodeIp'
   SecondaryReplicaNode0Ip:
     Value: !GetAtt
       - SecondaryReplicaNode0
       - Outputs.NodePrivateIp
     Description: Private IP Address of Secondary Replica 0 Node
     Condition: CreateThreeReplicaSet
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-SecondaryReplicaNode0Ip'
   SecondaryReplicaNode1Ip:
     Value: !GetAtt
       - SecondaryReplicaNode1
       - Outputs.NodePrivateIp
     Description: Private IP Address of Secondary Replica 1 Node
     Condition: CreateThreeReplicaSet
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-SecondaryReplicaNode1Ip'
   MongoDBServerAccessSecurityGroup:
     Value: !Ref MongoDBServerAccessSecurityGroup
     Description: MongoDB Access Security Group
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-MongoDBServerAccessSecurityGroup'
