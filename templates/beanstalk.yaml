@@ -1,0 +1,532 @@
+Description: Elastic Beanstalk for Agora
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  AppDeployBucket:
+    Description: Bucket where beanstalk deploys apps from
+    Type: String
+  AppHealthcheckUrl:
+    Type: String
+    Description: The AWS EB health check path
+  AutoScalingMaxSize:
+    Type: String
+    Default: '2'
+  AutoScalingMinSize:
+    Type: String
+    Default: '1'
+  EbHealthReportingSystem:
+    Type: String
+    Default: basic
+    AllowedValues:
+      - basic
+      - enhanced
+    ConstraintDescription: must be either basic or enhanced
+  SnsBounceNotificationEndpoint:
+    Type: String
+    Description: Email address for SNS bounce notifications
+  SnsNotificationEndpoint:
+    Type: String
+    Description: Email address for AWS SNS notifications
+  EbSolutionStackName:
+    Description: The AWS Solution Stack
+    Type: String
+  EC2InstanceType:
+    Type: String
+    Description: Instance type to use for Elastic Beanstalk Instances
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m1.small
+      - m1.medium
+      - m1.large
+      - m1.xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - m2.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - cr1.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.16xlarge
+      - x1.16xlarge
+      - x1.32xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - hi1.4xlarge
+      - hs1.8xlarge
+      - c1.medium
+      - c1.xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - cc1.4xlarge
+      - cc2.8xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - cg1.4xlarge
+      - p2.xlarge
+      - p2.8xlarge
+      - p2.16xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - f1.2xlarge
+      - f1.16xlarge
+  NpmUseProduction:
+    Type: String
+    Description: Install production dependencies onto instances
+    Default: 'true'
+  MongodbHost:
+    Type: String
+    Description: Mongo database host address
+  MongodbPort:
+    Type: String
+    Description: Mongo database port
+    Default: '27017'
+  EbRollingUpdateType:
+    Type: String
+    Description: Env's auto scaling group rolling update type
+    Default: 'Health'
+  EbDeploymentPolicy:
+    Type: String
+    Description: Application version deployment type
+    Default: 'Rolling'
+Resources:
+  S3AppDeployBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref AppDeployBucket
+  S3ManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ListAccess
+            Action:
+              - 's3:ListBucket'
+              - 's3:GetBucketLocation'
+            Effect: Allow
+            Resource: !GetAtt S3AppDeployBucket.Arn
+          - Sid: ModAccess
+            Action:
+              - 's3:PutObject'
+              - 's3:PutObjectAcl'
+              - 's3:GetObject'
+              - 's3:GetObjectAcl'
+              - 's3:DeleteObject'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - !GetAtt S3AppDeployBucket.Arn
+                - '/*'
+  R53RecordSet:
+    Type: 'AWS::Route53::RecordSet'
+    Properties:
+      HostedZoneId: !ImportValue us-east-1-agora-common-HostedZone
+      Name: !Join
+        - ''
+        - - !Ref AWS::StackName
+          - .
+          - !ImportValue us-east-1-agora-common-DNSDomainName
+          - .
+      Type: CNAME
+      TTL: '900'
+      ResourceRecords:
+        - !GetAtt
+          - BeanstalkEnvironment
+          - EndpointURL
+  # KMS Keys
+  KmsDecryptManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ReadAccess
+            Action:
+              - 'kms:ListKeys'
+              - 'kms:ListAliases'
+              - 'kms:DescribeKey'
+              - 'kms:ListKeyPolicies'
+              - 'kms:GetKeyPolicy'
+              - 'kms:GetKeyRotationStatus'
+              - 'iam:ListUsers'
+              - 'iam:ListRoles'
+            Effect: Allow
+            Resource: !GetAtt KmsKey.Arn
+          - Sid: DecryptAccess
+            Action:
+              - 'kms:Encrypt'
+              - 'kms:Decrypt'
+            Effect: Allow
+            Resource: !GetAtt KmsKey.Arn
+  KmsKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: !Join
+        - '-'
+        - - !Ref AWS::StackName
+          - "KmsKey"
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: "Allow administration of the key"
+            Effect: "Allow"
+            Principal:
+              AWS:
+                - !Join
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref AWS::AccountId
+                    - ':root'
+                - !ImportValue us-east-1-bootstrap-CfServiceRoleArn
+            Action:
+              - "kms:Create*"
+              - "kms:Describe*"
+              - "kms:Enable*"
+              - "kms:List*"
+              - "kms:Put*"
+              - "kms:Update*"
+              - "kms:Revoke*"
+              - "kms:Disable*"
+              - "kms:Get*"
+              - "kms:Delete*"
+              - "kms:ScheduleKeyDeletion"
+              - "kms:CancelKeyDeletion"
+            Resource: "*"
+          -
+            Sid: "Allow use of the key"
+            Effect: "Allow"
+            Principal:
+              AWS:
+                - !Join
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref AWS::AccountId
+                    - ':root'
+                - !ImportValue us-east-1-bootstrap-CfServiceRoleArn
+            Action:
+              - "kms:Encrypt"
+              - "kms:Decrypt"
+              - "kms:ReEncrypt*"
+              - "kms:GenerateDataKey*"
+              - "kms:DescribeKey"
+            Resource: "*"
+  KmsKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Join
+        - ''
+        - - 'alias/'
+          - !Ref AWS::StackName
+          - '/KmsKey'
+      TargetKeyId: !Ref KmsKey
+  SsmManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: GetParamAccess
+            Action:
+              - 'ssm:*'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:ssm:'
+                - !Ref AWS::Region
+                - ':'
+                - !Ref AWS::AccountId
+                - ':'
+                - 'parameter/'
+                - !Ref AWS::StackName
+                - '/*'
+  BeanstalkConfigTemplate:
+    Type: 'AWS::ElasticBeanstalk::ConfigurationTemplate'
+    Properties:
+      ApplicationName: !ImportValue us-east-1-agora-common-BeanstalkAppName
+      SolutionStackName: !Ref EbSolutionStackName
+      OptionSettings:
+        # EB environment options
+        - Namespace: 'aws:ec2:vpc'
+          OptionName: VPCId
+          Value: !ImportValue us-east-1-computevpc-VPCId
+        - Namespace: 'aws:ec2:vpc'
+          OptionName: ELBScheme
+          Value: 'internal'
+        - Namespace: 'aws:ec2:vpc'
+          OptionName: AssociatePublicIpAddress
+          Value: 'false'
+        - Namespace: 'aws:ec2:vpc'
+          OptionName: Subnets
+          Value: !Join
+            - ','
+            - - !ImportValue us-east-1-computevpc-PrivateSubnet
+              - !ImportValue us-east-1-computevpc-PrivateSubnet1
+              - !ImportValue us-east-1-computevpc-PrivateSubnet2
+        - Namespace: 'aws:ec2:vpc'
+          OptionName: ELBSubnets
+          Value: !Join
+            - ','
+            - - !ImportValue us-east-1-computevpc-PublicSubnet
+              - !ImportValue us-east-1-computevpc-PublicSubnet1
+              - !ImportValue us-east-1-computevpc-PublicSubnet2
+        - Namespace: 'aws:autoscaling:asg'
+          OptionName: MaxSize
+          Value: !Ref AutoScalingMaxSize
+        - Namespace: 'aws:autoscaling:asg'
+          OptionName: MinSize
+          Value: !Ref AutoScalingMinSize
+        - Namespace: 'aws:autoscaling:launchconfiguration'
+          OptionName: IamInstanceProfile
+          Value: !Ref InstanceProfile
+        - Namespace: 'aws:autoscaling:launchconfiguration'
+          OptionName: InstanceType
+          Value: !Ref EC2InstanceType
+#        - Namespace: 'aws:autoscaling:launchconfiguration'
+#          OptionName: SecurityGroups
+#          Value: !Ref InstanceSecurityGroup
+        - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
+          OptionName: RollingUpdateEnabled
+          Value: true
+        - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
+          OptionName: RollingUpdateType
+          Value: !Ref EbRollingUpdateType
+        - Namespace: 'aws:elasticbeanstalk:application'
+          OptionName: Application Healthcheck URL
+          Value: !Ref AppHealthcheckUrl
+        - Namespace: 'aws:elasticbeanstalk:cloudwatch:logs'
+          OptionName: StreamLogs
+          Value: 'true'
+        - Namespace: 'aws:elasticbeanstalk:cloudwatch:logs'
+          OptionName: DeleteOnTerminate
+          Value: 'true'
+        - Namespace: 'aws:elasticbeanstalk:cloudwatch:logs'
+          OptionName: RetentionInDays
+          Value: '90'
+        - Namespace: 'aws:elasticbeanstalk:command'
+          OptionName: DeploymentPolicy
+          Value: !Ref EbDeploymentPolicy
+        - Namespace: 'aws:elasticbeanstalk:environment'
+          OptionName: ServiceRole
+          Value: !Ref BeanstalkServiceRole
+        - Namespace: 'aws:elasticbeanstalk:environment'
+          OptionName: LoadBalancerType
+          Value: 'classic'
+        - Namespace: 'aws:elasticbeanstalk:environment:process:default'
+          OptionName: Protocol
+          Value: 'HTTP'
+        - Namespace: 'aws:elasticbeanstalk:environment:process:default'
+          OptionName: HealthCheckPath
+          Value: !Ref AppHealthcheckUrl
+        - Namespace: 'aws:elasticbeanstalk:healthreporting:system'
+          OptionName: SystemType
+          Value: !Ref EbHealthReportingSystem
+        - Namespace: 'aws:elasticbeanstalk:hostmanager'
+          OptionName: LogPublicationControl
+          Value: true
+        - Namespace: 'aws:elasticbeanstalk:xray'
+          OptionName: XRayEnabled
+          Value: false
+        - Namespace: 'aws:elb:healthcheck'
+          OptionName: Target
+          Value: !Ref AppHealthcheckUrl
+        - Namespace: 'aws:elb:listener:443'
+          OptionName: ListenerProtocol
+          Value: HTTPS
+        - Namespace: 'aws:elb:listener:443'
+          OptionName: InstanceProtocol
+          Value: HTTP
+        - Namespace: 'aws:elb:listener:443'
+          OptionName: InstancePort
+          Value: '80'
+        - Namespace: 'aws:elb:listener:443'
+          OptionName: SSLCertificateId
+          Value: !ImportValue us-east-1-agora-common-SSLCertificate
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: NPM_USE_PRODUCTION
+          Value: !Ref NpmUseProduction
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: MONGODB_HOST
+          Value: !Ref MongodbHost
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: MONGODB_PORT
+          Value: !Ref MongodbPort
+  BeanstalkEnvironment:
+    Type: 'AWS::ElasticBeanstalk::Environment'
+    Properties:
+      ApplicationName: !ImportValue us-east-1-agora-common-BeanstalkAppName
+      TemplateName: !Ref BeanstalkConfigTemplate
+      EnvironmentName: !Join
+        - '-'
+        - - !Ref 'AWS::StackName'
+      Tier:
+        Name: WebServer
+        Type: Standard
+  BeanstalkServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - elasticbeanstalk.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                sts:ExternalId: elasticbeanstalk
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth'
+        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService'
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM'
+  EC2ServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'
+        - 'arn:aws:iam::aws:policy/AmazonSNSFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSESFullAccess'
+        - !Ref SsmManagedPolicy
+        - !Ref S3ManagedPolicy
+        - !Ref KmsDecryptManagedPolicy
+  InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EC2ServiceRole
+  SNSBounceTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      Subscription:
+        -
+          Endpoint: !Ref SnsBounceNotificationEndpoint
+          Protocol: "email"
+  SNSTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      Subscription:
+        -
+          Endpoint: !Ref SnsNotificationEndpoint
+          Protocol: "email"
+#  LoadBalancerSecurityGroup:
+#    Type: 'AWS::EC2::SecurityGroup'
+#    Properties:
+#      GroupDescription: Load Balancer Security Group
+#      VpcId: !ImportValue us-east-1-computevpc-VPCId
+#      SecurityGroupIngress:
+#        - CidrIp: 0.0.0.0/0
+#          FromPort: '443'
+#          ToPort: '443'
+#          IpProtocol: tcp
+#        - CidrIp: 0.0.0.0/0
+#          FromPort: '80'
+#          ToPort: '80'
+#          IpProtocol: tcp
+#      SecurityGroupEgress:
+#        - CidrIp: 0.0.0.0/0
+#          FromPort: '80'
+#          ToPort: '80'
+#          IpProtocol: tcp
+#  InstanceSecurityGroup:
+#    Type: 'AWS::EC2::SecurityGroup'
+#    Properties:
+#      GroupName: !Join
+#        - '-'
+#        - - !Ref 'AWS::StackName'
+#          - InstanceSecurityGroup
+#      GroupDescription: EC2 Security Group
+#      VpcId: !ImportValue us-east-1-computevpc-VPCId
+#      SecurityGroupIngress:
+#        - IpProtocol: tcp
+#          FromPort: '80'
+#          ToPort: '80'
+#          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+Outputs:
+  S3AppDeployBucket:
+    Value: !Ref S3AppDeployBucket
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-AppDeployBucket'
+  KmsKey:
+    Value: !Ref KmsKey
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-KmsKey'
+  KmsKeyAlias:
+    Value: !Ref KmsKeyAlias
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-KmsKeyAlias'
+  AppPublicEndpoint:
+    Value: !Join
+      - ''
+      - - 'https://'
+        - !Ref AWS::StackName
+        - .
+        - !ImportValue us-east-1-agora-common-DNSDomainName
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-AppPublicEndpoint'
+  BeanstalkEnvironmentName:
+    Value: !Ref BeanstalkEnvironment
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkEnvironmentName'
+  BeanstalkEnvironmentUrl:
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !GetAtt
+          - BeanstalkEnvironment
+          - EndpointURL
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkEnvironmentUrl'
+#  InstanceSecurityGroup:
+#    Value: !Ref InstanceSecurityGroup
+#    Export:
+#      Name: !Sub '${AWS::Region}-${AWS::StackName}-InstanceSecurityGroup'
