@@ -2,10 +2,10 @@ template_path: templates/mongodb.yaml
 stack_name: agoradb-develop
 parameters:
   KeyPairName: 'toptal'
-  VPC: 'vpc-e66bd19d'
-  PrimaryNodeSubnet: 'subnet-17b8934a'
-  Secondary0NodeSubnet: 'subnet-34392c50'
-  Secondary1NodeSubnet: 'subnet-aad9ec85'
-  BastionSecurityGroupID: 'sg-df2b4ba9'
+  VPC: !stack_output_external computevpc::VPCId
+  PrimaryNodeSubnet: !stack_output_external computevpc::PrivateSubnet
+  Secondary0NodeSubnet: !stack_output_external computevpc::PrivateSubnet1
+  Secondary1NodeSubnet: !stack_output_external computevpc::PrivateSubnet2
+  BastionSecurityGroupID: !stack_output_external computevpc::VpnSecurityGroup
   ClusterReplicaSetCount: '1'
   MongoDBAdminPassword: !ssm /agora-develop/MongodbPassword
