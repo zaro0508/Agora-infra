@@ -27,6 +27,68 @@ Resources:
       DomainValidationOptions:
       - DomainName: !Ref DNSDomainName
         ValidationDomain: !Ref DNSDomainName
+  KmsKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: !Join
+        - '-'
+        - - !Ref AWS::StackName
+          - "KmsKey"
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: "Allow administration of the key"
+            Effect: "Allow"
+            Principal:
+              AWS:
+                - !Join
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref AWS::AccountId
+                    - ':root'
+                - !ImportValue us-east-1-bootstrap-CfServiceRoleArn
+            Action:
+              - "kms:Create*"
+              - "kms:Describe*"
+              - "kms:Enable*"
+              - "kms:List*"
+              - "kms:Put*"
+              - "kms:Update*"
+              - "kms:Revoke*"
+              - "kms:Disable*"
+              - "kms:Get*"
+              - "kms:Delete*"
+              - "kms:ScheduleKeyDeletion"
+              - "kms:CancelKeyDeletion"
+            Resource: "*"
+          -
+            Sid: "Allow use of the key"
+            Effect: "Allow"
+            Principal:
+              AWS:
+                - !Join
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref AWS::AccountId
+                    - ':root'
+                - !ImportValue us-east-1-bootstrap-CfServiceRoleArn
+            Action:
+              - "kms:Encrypt"
+              - "kms:Decrypt"
+              - "kms:ReEncrypt*"
+              - "kms:GenerateDataKey*"
+              - "kms:DescribeKey"
+            Resource: "*"
+  KmsKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Join
+        - ''
+        - - 'alias/'
+          - !Ref AWS::StackName
+          - '/KmsKey'
+      TargetKeyId: !Ref KmsKey
 Outputs:
   BeanstalkAppName:
     Value: !Ref BeanstalkApplication
@@ -44,3 +106,15 @@ Outputs:
     Value: !Ref DNSDomainName
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-DNSDomainName'
+  KmsKey:
+    Value: !Ref KmsKey
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-KmsKey'
+  KmsKeyAlias:
+    Value: !Ref KmsKeyAlias
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-KmsKeyAlias'
+  KmsKeyArn:
+    Value: !GetAtt KmsKey.Arn
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-KmsKeyArn'
