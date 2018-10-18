@@ -5,7 +5,7 @@ dependencies:
 parameters:
   AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-develop'
   AppHealthcheckUrl: 'HTTP:80/about'
-  AutoScalingMaxSize: '1'
+  AutoScalingMaxSize: '2'
   AutoScalingMinSize: '1'
   SnsBounceNotificationEndpoint: 'agora-develop-bounce-notifications@sagebase.org'
   SnsNotificationEndpoint: 'agora-develop@sagebase.org'
@@ -13,4 +13,3 @@ parameters:
   EC2InstanceType: 't2.micro'
   MongodbHost: !stack_output_external agoradb-develop::PrimaryReplicaNodeIp
   NpmUseProduction: 'false'
-
