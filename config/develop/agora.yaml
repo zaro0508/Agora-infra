@@ -13,4 +13,3 @@ parameters:
   EC2InstanceType: 't2.small'
   EC2KeyName: 'toptal'
   MongodbHost: !stack_output_external agoradb-develop::PrimaryReplicaNodeIp
-  NpmUseProduction: 'false'
