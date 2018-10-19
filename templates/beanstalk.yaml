@@ -105,6 +105,9 @@ Parameters:
       - d2.8xlarge
       - f1.2xlarge
       - f1.16xlarge
+  EC2KeyName:
+    Description: An existing EC2 keypair to allow secure access to instances
+    Type: String
   NpmUseProduction:
     Type: String
     Description: Install production dependencies onto instances
@@ -256,6 +259,9 @@ Resources:
         - Namespace: 'aws:autoscaling:launchconfiguration'
           OptionName: InstanceType
           Value: !Ref EC2InstanceType
+        - Namespace: 'aws:autoscaling:launchconfiguration'
+          OptionName: EC2KeyName
+          Value: !Ref EC2KeyName
         - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
           OptionName: RollingUpdateEnabled
           Value: true
