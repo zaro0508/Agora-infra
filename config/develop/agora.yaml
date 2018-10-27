@@ -16,4 +16,3 @@ parameters:
   MongodbAccessSecurityGroup: !stack_output_external agoradb-develop::MongoDBServerAccessSecurityGroup
   EbDeploymentPolicy: 'AllAtOnce'
   EbRollingUpdateType: 'Time'
-#  NodeEnv: 'production'
