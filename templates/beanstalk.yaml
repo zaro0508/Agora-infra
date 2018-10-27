@@ -300,9 +300,6 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:environment:process:default'
           OptionName: Protocol
           Value: 'HTTP'
-        - Namespace: 'aws:elasticbeanstalk:environment:process:default'
-          OptionName: HealthCheckPath
-          Value: !Ref AppHealthcheckUrl
         - Namespace: 'aws:elasticbeanstalk:healthreporting:system'
           OptionName: SystemType
           Value: !Ref EbHealthReportingSystem
