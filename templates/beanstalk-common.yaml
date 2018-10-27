@@ -10,23 +10,30 @@ Resources:
     Type: 'AWS::ElasticBeanstalk::Application'
     Properties:
       ApplicationName: agora-ampad
-  HostedZone:
-    Type: "AWS::Route53::HostedZone"
-    Properties:
-      HostedZoneConfig:
-        Comment: "Agora hosted zone"
-      Name: !Ref DNSDomainName
-      VPCs:
-        -
-          VPCId: !ImportValue us-east-1-computevpc-VPCId
-          VPCRegion: !Ref AWS::Region
+#  HostedZone:
+#    Type: "AWS::Route53::HostedZone"
+#    Properties:
+#      HostedZoneConfig:
+#        Comment: "Agora hosted zone"
+#      Name: !Ref DNSDomainName
+#      VPCs:
+#        -
+#          VPCId: !ImportValue us-east-1-computevpc-VPCId
+#          VPCRegion: !Ref AWS::Region
+
   SSLCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !Ref DNSDomainName
+      DomainName: !Join
+        - '.'
+        - - '*'
+          - !Ref DNSDomainName
       DomainValidationOptions:
-      - DomainName: !Ref DNSDomainName
-        ValidationDomain: !Ref DNSDomainName
+        - DomainName: !Join
+            - '.'
+            - - '*'
+              - !Ref DNSDomainName
+          ValidationDomain: !Ref DNSDomainName
   KmsKey:
     Type: "AWS::KMS::Key"
     Properties:
@@ -94,10 +101,10 @@ Outputs:
     Value: !Ref BeanstalkApplication
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkAppName'
-  HostedZone:
-    Value: !Ref HostedZone
+  HostedZoneId:
+    Value: ZS9A6IHRRJXMS
     Export:
-      Name: !Sub '${AWS::Region}-${AWS::StackName}-HostedZone'
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-HostedZoneId'
   SSLCertificate:
     Value: !Ref SSLCertificate
     Export:
