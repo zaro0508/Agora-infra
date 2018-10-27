@@ -1,2 +1,4 @@
 template_path: templates/beanstalk-common.yaml
 stack_name: agora-common
+parameters:
+  DNSDomainName: 'ampadscicomp.org'
