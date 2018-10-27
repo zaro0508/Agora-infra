@@ -108,10 +108,6 @@ Parameters:
   EC2KeyName:
     Description: An existing EC2 keypair to allow secure access to instances
     Type: String
-#  NpmUseProduction:
-#    Type: String
-#    Description: Install production dependencies onto instances
-#    Default: 'true'
   MongodbHost:
     Type: String
     Description: Mongo database host address
@@ -130,10 +126,6 @@ Parameters:
   MongodbAccessSecurityGroup:
     Type: String
     Description: Security group with access to MongoDB servers
-#  NodeEnv:
-#    Type: String
-#    Description: The node environment
-#    Default: 'development'
 Resources:
   S3AppDeployBucket:
     Type: 'AWS::S3::Bucket'
@@ -320,12 +312,6 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:xray'
           OptionName: XRayEnabled
           Value: false
-#        - Namespace: 'aws:elasticbeanstalk:application:environment'
-#          OptionName: NPM_USE_PRODUCTION
-#          Value: !Ref NpmUseProduction
-#        - Namespace: 'aws:elasticbeanstalk:application:environment'
-#          OptionName: NODE_ENV
-#          Value: !Ref NodeEnv
         - Namespace: 'aws:elasticbeanstalk:application:environment'
           OptionName: MONGODB_HOST
           Value: !Ref MongodbHost
