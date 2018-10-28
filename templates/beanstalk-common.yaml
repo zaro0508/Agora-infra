@@ -1,26 +1,22 @@
+# This creates a common set of resources of Agora.
+# The Beanstalk Application is designed to contain all envs (dev, stage, prod, etc..)
+# Requires an existing HostedZone
 AWSTemplateFormatVersion: 2010-09-09
 Description: Essentials for Agora
 Parameters:
+  EbAppName:
+    Description: Elastic Beanstalk Application Name
+    Type: String
+    Default: 'agora-ampad'
   DNSDomainName:
     Description: DNS Domain name for app
     Type: String
-    Default: 'ampadportal.org'
+    Default: 'ampadscicomp.org'
 Resources:
   BeanstalkApplication:
     Type: 'AWS::ElasticBeanstalk::Application'
     Properties:
-      ApplicationName: agora-ampad
-#  HostedZone:
-#    Type: "AWS::Route53::HostedZone"
-#    Properties:
-#      HostedZoneConfig:
-#        Comment: "Agora hosted zone"
-#      Name: !Ref DNSDomainName
-#      VPCs:
-#        -
-#          VPCId: !ImportValue us-east-1-computevpc-VPCId
-#          VPCRegion: !Ref AWS::Region
-
+      ApplicationName: !Ref EbAppName
   SSLCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
@@ -101,7 +97,7 @@ Outputs:
     Value: !Ref BeanstalkApplication
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkAppName'
-  HostedZoneId:
+  HostedZoneId:         # Existing hosted zone id
     Value: ZS9A6IHRRJXMS
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-HostedZoneId'
