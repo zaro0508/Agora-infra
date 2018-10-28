@@ -14,5 +14,3 @@ parameters:
   EC2KeyName: 'toptal'
   MongodbHost: !stack_output_external agoradb-staging::PrimaryReplicaNodeIp
   MongodbAccessSecurityGroup: !stack_output_external agoradb-staging::MongoDBServerAccessSecurityGroup
-  EbDeploymentPolicy: 'AllAtOnce'
-  EbRollingUpdateType: 'Time'
