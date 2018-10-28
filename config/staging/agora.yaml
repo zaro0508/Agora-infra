@@ -1,0 +1,18 @@
+template_path: templates/beanstalk.yaml
+stack_name: agora-staging
+dependencies:
+  - agoradb
+parameters:
+  AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-staging'
+  AppHealthcheckUrl: '/about'
+  AutoScalingMaxSize: '2'
+  AutoScalingMinSize: '1'
+  SnsBounceNotificationEndpoint: 'agora-staging-bounce-notifications@sagebase.org'
+  SnsNotificationEndpoint: 'agora-staging@sagebase.org'
+  EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.5.4 running Node.js'
+  EC2InstanceType: 't2.small'
+  EC2KeyName: 'toptal'
+  MongodbHost: !stack_output_external agoradb-staging::PrimaryReplicaNodeIp
+  MongodbAccessSecurityGroup: !stack_output_external agoradb-staging::MongoDBServerAccessSecurityGroup
+  EbDeploymentPolicy: 'AllAtOnce'
+  EbRollingUpdateType: 'Time'
