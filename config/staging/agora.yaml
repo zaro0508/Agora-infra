@@ -4,6 +4,7 @@ dependencies:
   - agoradb
 parameters:
   AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-staging'
+  AppEnv: 'staging'
   AppHealthcheckUrl: '/about'
   AutoScalingMaxSize: '2'
   AutoScalingMinSize: '1'

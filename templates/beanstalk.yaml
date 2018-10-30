@@ -4,6 +4,9 @@ Parameters:
   AppDeployBucket:
     Description: Bucket where beanstalk deploys apps from
     Type: String
+  AppEnv:
+    Type: String
+    Description: The application environment
   AppHealthcheckUrl:
     Type: String
     Description: The AWS EB health check path
@@ -315,6 +318,9 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:application:environment'
           OptionName: MONGODB_PORT
           Value: !Ref MongodbPort
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: APP_ENV
+          Value: !Ref AppEnv
   BeanstalkEnvironment:
     Type: 'AWS::ElasticBeanstalk::Environment'
     Properties:
