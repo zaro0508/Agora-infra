@@ -412,3 +412,7 @@ Outputs:
           - EndpointURL
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkEnvironmentUrl'
+  InstanceProfile:
+    Value: !Ref InstanceProfile
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-InstanceProfile'
