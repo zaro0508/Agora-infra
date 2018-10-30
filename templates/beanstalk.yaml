@@ -300,6 +300,12 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:environment:process:default'
           OptionName: Protocol
           Value: 'HTTP'
+        - Namespace: 'aws:elasticbeanstalk:environment:process:ssl'
+          OptionName: Protocol
+          Value: 'HTTPS'
+        - Namespace: 'aws:elasticbeanstalk:environment:process:ssl'
+          OptionName: Port
+          Value: '443'
         - Namespace: 'aws:elasticbeanstalk:healthreporting:system'
           OptionName: SystemType
           Value: !Ref EbHealthReportingSystem
