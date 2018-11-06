@@ -134,6 +134,8 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Ref AppDeployBucket
+  LoadBalancerAccessLogsBucket:
+    Type: 'AWS::S3::Bucket'
   S3ManagedPolicy:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
@@ -145,7 +147,9 @@ Resources:
               - 's3:ListBucket'
               - 's3:GetBucketLocation'
             Effect: Allow
-            Resource: !GetAtt S3AppDeployBucket.Arn
+            Resource:
+              - !GetAtt S3AppDeployBucket.Arn
+              - !GetAtt LoadBalancerAccessLogsBucket.Arn
           - Sid: ModAccess
             Action:
               - 's3:PutObject'
@@ -154,10 +158,15 @@ Resources:
               - 's3:GetObjectAcl'
               - 's3:DeleteObject'
             Effect: Allow
-            Resource: !Join
-              - ''
-              - - !GetAtt S3AppDeployBucket.Arn
-                - '/*'
+            Resource:
+              - !Join
+                - ''
+                - - !GetAtt S3AppDeployBucket.Arn
+                  - '/*'
+              - !Join
+                - ''
+                - - !GetAtt LoadBalancerAccessLogsBucket.Arn
+                  - '/*'
   R53RecordSet:
     Type: 'AWS::Route53::RecordSet'
     Properties:
@@ -294,6 +303,15 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: LoadBalancerType
           Value: 'application'
+        - Namespace: 'aws:elbv2:loadbalancer'
+          OptionName: AccessLogsS3Bucket
+          Value: !Ref LoadBalancerAccessLogsBucket
+        - Namespace: 'aws:elbv2:loadbalancer'
+          OptionName: AccessLogsS3Enabled
+          Value: 'true'
+        - Namespace: 'aws:elbv2:loadbalancer'
+          OptionName: AccessLogsS3Prefix
+          Value: !Ref AWS::StackName
         # use manually generated SSL certificate '*.ampadportal.org'
         - Namespace: 'aws:elbv2:listener:443'
           OptionName: SSLCertificateArns
@@ -397,6 +415,10 @@ Outputs:
     Value: !Ref S3AppDeployBucket
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-AppDeployBucket'
+  LoadBalancerAccessLogsBucket:
+    Value: !Ref LoadBalancerAccessLogsBucket
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-LoadBalancerAccessLogsBucket'
   AppPublicEndpoint:
     Value: !Join
       - ''
