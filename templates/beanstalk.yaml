@@ -294,9 +294,10 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: LoadBalancerType
           Value: 'application'
+        # use manually generated SSL certificate '*.ampadportal.org'
         - Namespace: 'aws:elbv2:listener:443'
           OptionName: SSLCertificateArns
-          Value: !ImportValue us-east-1-agora-common-SSLCertificate
+          Value: 'arn:aws:acm:us-east-1:055273631518:certificate/412c0ea4-8123-48dd-b0af-608558cbb902'
         - Namespace: 'aws:elbv2:listener:443'
           OptionName: Protocol
           Value: HTTPS
