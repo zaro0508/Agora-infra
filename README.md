@@ -4,7 +4,7 @@ application.
 
 
 # Purpose
-This repo contains infrastructure templates to for the Agora application.
+This repo contains infrastructure templates for the Agora application.
 It is also setup with CI/CD to automatically deploy the infrastructure
 to AWS.
 
@@ -21,6 +21,19 @@ There is a specific workflow for making changes to the infrastructure.
 ## Continuous Integration
 We have configured Travis to deploy CF template updates.  Travis deploys using
 [sceptre](https://sceptre.cloudreach.com/latest/about.html)
+
+
+# AWS Infrastructure
+We setup Agora application to run in AWS Elastic Beanstalk.  The beanstalk
+is setup to run Agora in three environments:
+* Development -> https://agora-develop.ampadportal.org
+* Staging -> https://agora-staging.ampadportal.org
+* Production -> https://agora.ampadportal.org
+
+## Deployment Workflow
+To deploy Agora updates to one of the environments just merge code to the branch you would like
+to deploy to then Travis will take care of building, testing and deployming the Agora
+application.
 
 
 # Contributions
