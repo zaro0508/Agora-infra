@@ -9,13 +9,25 @@ It is also setup with CI/CD to automatically deploy the infrastructure
 to AWS.
 
 
+# Architecture
+Agora runs on AWS as an Elastic Beanstalk app.
+
+
+![alt text][architecture]
+
+
+## Security
+The instances running agora and the database for it runs in a private
+subnet which means neither the instances nor the database are accessible
+from the internet.
+
 # Workflow
 There is a specific workflow for making changes to the infrastructure.
 * Make pull requests to this repo
 * Get someone to review and approve your changes
 * Change is merged after being approved
 * Travis runs a build to test the infrastructure templates
-* Travis deploys the infrastructure updates to AWS
+* Travis deploys the updated infrastructure to AWS
 
 
 ## Continuous Integration
@@ -49,3 +61,6 @@ application.
 to store secrets for this project.  Sceptre retrieves the secrets using
 a [sceptre ssm resolver](https://github.com/cloudreach/sceptre/tree/v1/contrib/ssm-resolver)
 and passes them to the cloudformation stack on deployment.
+
+
+[architecture]: infra-arch1.png "Agora architecture"
