@@ -290,7 +290,7 @@ Resources:
           Value: !Ref MongodbAccessSecurityGroup
         - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
           OptionName: RollingUpdateEnabled
-          Value: true
+          Value: 'true'
         - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
           OptionName: RollingUpdateType
           Value: !Ref EbRollingUpdateType
@@ -336,10 +336,10 @@ Resources:
           Value: !Ref EbHealthReportingSystem
         - Namespace: 'aws:elasticbeanstalk:hostmanager'
           OptionName: LogPublicationControl
-          Value: true
+          Value: 'true'
         - Namespace: 'aws:elasticbeanstalk:xray'
           OptionName: XRayEnabled
-          Value: false
+          Value: 'false'
         - Namespace: 'aws:elasticbeanstalk:application:environment'
           OptionName: MONGODB_HOST
           Value: !Ref MongodbHost

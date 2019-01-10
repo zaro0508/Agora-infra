@@ -283,16 +283,16 @@ Resources:
       GroupDescription: MongoDB server management and access ports
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
           SourceSecurityGroupId: !Ref BastionSecurityGroupID
         - IpProtocol: tcp
-          FromPort: '27017'
-          ToPort: '27030'
+          FromPort: 27017
+          ToPort: 27030
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
         - IpProtocol: tcp
-          FromPort: '28017'
-          ToPort: '28017'
+          FromPort: 28017
+          ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
   MongoDBServersSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -301,16 +301,16 @@ Resources:
       GroupDescription: MongoDB inter-server communication and management ports
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
           SourceSecurityGroupId: !Ref MongoDBServerSecurityGroup
         - IpProtocol: tcp
-          FromPort: '27017'
-          ToPort: '27030'
+          FromPort: 27017
+          ToPort: 27030
           SourceSecurityGroupId: !Ref MongoDBServerSecurityGroup
         - IpProtocol: tcp
-          FromPort: '28017'
-          ToPort: '28017'
+          FromPort: 28017
+          ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerSecurityGroup
   MongoDBNodeIAMRole:
     Type: 'AWS::IAM::Role'
@@ -370,7 +370,6 @@ Resources:
     Type: 'AWS::CloudFormation::WaitConditionHandle'
     Properties: {}
   PrimaryReplicaNode0:
-    DependsOn: PrimaryReplicaNode0WaitForNodeInstallWaitHandle
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Sub
@@ -417,7 +416,6 @@ Resources:
     Properties: {}
     Condition: CreateThreeReplicaSet
   SecondaryReplicaNode0:
-    DependsOn: SecondaryReplicaNode0WaitForNodeInstallWaitHandle
     Condition: CreateThreeReplicaSet
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -466,7 +464,6 @@ Resources:
     Properties: {}
     Condition: CreateThreeReplicaSet
   SecondaryReplicaNode1:
-    DependsOn: SecondaryReplicaNode1WaitForNodeInstallWaitHandle
     Condition: CreateThreeReplicaSet
     Type: 'AWS::CloudFormation::Stack'
     Properties:
