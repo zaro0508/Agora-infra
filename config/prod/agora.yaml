@@ -1,4 +1,4 @@
-template_path: templates/beanstalk.yaml
+template_path: beanstalk.yaml
 stack_name: agora-prod
 dependencies:
   - agoradb

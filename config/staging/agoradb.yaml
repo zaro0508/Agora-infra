@@ -1,4 +1,4 @@
-template_path: templates/mongodb.yaml
+template_path: mongodb.yaml
 stack_name: agoradb-staging
 parameters:
   KeyPairName: 'toptal'

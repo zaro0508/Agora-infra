@@ -1,2 +1,2 @@
-template_path: templates/beanstalk-common.yaml
+template_path: beanstalk-common.yaml
 stack_name: agora-common
