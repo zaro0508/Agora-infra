@@ -1,7 +1,7 @@
 template_path: beanstalk.yaml
 stack_name: agora-prod
 dependencies:
-  - agoradb
+  - prod/agoradb.yaml
 parameters:
   AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-prod'
   AppEnv: 'prod'
