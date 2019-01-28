@@ -1,7 +1,7 @@
 template_path: beanstalk.yaml
 stack_name: agora-staging
 dependencies:
-  - agoradb
+  - staging/agoradb.yaml
 parameters:
   AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-staging'
   AppEnv: 'staging'
