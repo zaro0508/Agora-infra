@@ -13,10 +13,36 @@ Parameters:
     Type: String
     Default: 'ampadscicomp.org'
 Resources:
+  BeanstalkServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - elasticbeanstalk.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                sts:ExternalId: elasticbeanstalk
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth'
+        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService'
   BeanstalkApplication:
     Type: 'AWS::ElasticBeanstalk::Application'
     Properties:
       ApplicationName: !Ref EbAppName
+      ResourceLifecycleConfig:
+        ServiceRole: !GetAtt BeanstalkServiceRole.Arn
+        VersionLifecycleConfig:
+          MaxAgeRule:
+            DeleteSourceFromS3: true
+            Enabled: true
+            MaxAgeInDays: 30
   SSLCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
@@ -97,6 +123,10 @@ Outputs:
     Value: !Ref BeanstalkApplication
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkAppName'
+  BeanstalkServiceRole:
+    Value: !Ref BeanstalkServiceRole
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-BeanstalkServiceRole'
   HostedZoneId:         # Existing hosted zone id
     Value: ZS9A6IHRRJXMS
     Export:
