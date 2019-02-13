@@ -311,7 +311,7 @@ Resources:
           Value: !Ref EbDeploymentPolicy
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: ServiceRole
-          Value: !Ref BeanstalkServiceRole
+          Value: !ImportValue us-east-1-agora-common-BeanstalkServiceRole
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: LoadBalancerType
           Value: 'application'
@@ -360,25 +360,6 @@ Resources:
       Tier:
         Name: WebServer
         Type: Standard
-  BeanstalkServiceRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - elasticbeanstalk.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-            Condition:
-              StringEquals:
-                sts:ExternalId: elasticbeanstalk
-      Path: /
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth'
-        - 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService'
   EC2ServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
