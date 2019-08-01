@@ -137,15 +137,6 @@ Parameters:
   MongodbAccessSecurityGroup:
     Type: String
     Description: Security group with access to MongoDB servers
-  EbManagedActionsEnabled:
-    Type: String
-    Default: false
-    AllowedValues:
-      - true
-      - false
-  EbManagedActionsPreferredStartTime:
-    Type: String
-    Default: 'Mon:09:00'
 Resources:
   S3AppDeployBucket:
     Type: 'AWS::S3::Bucket'
@@ -371,10 +362,10 @@ Resources:
           Value: !Ref DisableOpencollective
         - Namespace: 'aws:elasticbeanstalk:managedactions'
           OptionName: 'ManagedActionsEnabled'
-          Value: !Ref EbManagedActionsEnabled
+          Value: 'true'
         - Namespace: 'aws:elasticbeanstalk:managedactions'
           OptionName: 'PreferredStartTime'
-          Value: !Ref EbManagedActionsPreferredStartTime
+          Value: 'Fri:00:00'
         - Namespace: 'aws:elasticbeanstalk:managedactions:platformupdate'
           OptionName: 'UpdateLevel'
           Value: 'minor'
