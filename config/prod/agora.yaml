@@ -11,8 +11,6 @@ parameters:
   EbHealthReportingSystem: 'enhanced'
   EbDeploymentPolicy: 'Immutable'
   EbRollingUpdateType: 'Immutable'
-  EbManagedActionsEnabled: 'true'
-  EbManagedActionsPreferredStartTime: 'Tues:09:00'
   SnsBounceNotificationEndpoint: 'agora-prod-bounce-notifications@sagebase.org'
   SnsNotificationEndpoint: 'agora-prod@sagebase.org'
   EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.5.4 running Node.js'
