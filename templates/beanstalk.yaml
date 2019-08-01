@@ -360,18 +360,6 @@ Resources:
         - Namespace: 'aws:elasticbeanstalk:application:environment'
           OptionName: DISABLE_OPENCOLLECTIVE
           Value: !Ref DisableOpencollective
-        - Namespace: 'aws:elasticbeanstalk:managedactions'
-          OptionName: 'ManagedActionsEnabled'
-          Value: 'true'
-        - Namespace: 'aws:elasticbeanstalk:managedactions'
-          OptionName: 'PreferredStartTime'
-          Value: 'Fri:00:00'
-        - Namespace: 'aws:elasticbeanstalk:managedactions:platformupdate'
-          OptionName: 'UpdateLevel'
-          Value: 'minor'
-        - Namespace: 'aws:elasticbeanstalk:managedactions:platformupdate'
-          OptionName: 'InstanceRefreshEnabled'
-          Value: 'true'
   BeanstalkEnvironment:
     Type: 'AWS::ElasticBeanstalk::Environment'
     Properties:
