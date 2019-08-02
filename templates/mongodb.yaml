@@ -231,6 +231,24 @@ Parameters:
     Description: >-
       Subnet-ID the existing subnet in your VPC where you want to deploy
       Secondary node(s).
+  Department:
+    Description: 'The department for this resource'
+    Type: String
+    AllowedPattern: '^\S*$'
+    ConstraintDescription: 'Must be string with no spaces'
+    Default: 'SysBio'
+  Project:
+    Description: 'The name of the project that this resource is used for'
+    Type: String
+    AllowedPattern: '^\S*$'
+    ConstraintDescription: 'Must be string with no spaces'
+    Default: 'amp-ad'
+  OwnerEmail:
+    Description: 'Email address of the owner of this resource'
+    Type: String
+    AllowedPattern: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+    ConstraintDescription: 'Must be an acceptable email address syntax(i.e. joe.smith@sagebase.org)'
+    Default: 'anna.greenwood@sagebase.org'
 Conditions:
   CreateThreeReplicaSet: !Equals
     - !Ref ClusterReplicaSetCount
@@ -276,6 +294,13 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       GroupDescription: Instances with access to MongoDB servers
+      Tags:
+        - Key: "Department"
+          Value: !Ref Department
+        - Key: "Project"
+          Value: !Ref Project
+        - Key: "OwnerEmail"
+          Value: !Ref OwnerEmail
   MongoDBServerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -294,6 +319,13 @@ Resources:
           FromPort: 28017
           ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
+      Tags:
+        - Key: "Department"
+          Value: !Ref Department
+        - Key: "Project"
+          Value: !Ref Project
+        - Key: "OwnerEmail"
+          Value: !Ref OwnerEmail
   MongoDBServersSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -312,6 +344,13 @@ Resources:
           FromPort: 28017
           ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerSecurityGroup
+      Tags:
+        - Key: "Department"
+          Value: !Ref Department
+        - Key: "Project"
+          Value: !Ref Project
+        - Key: "OwnerEmail"
+          Value: !Ref OwnerEmail
   MongoDBNodeIAMRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -452,6 +491,13 @@ Resources:
         NodeReplicaSetIndex: '1'
         ReplicaShardIndex: !Ref ReplicaShardIndex
         ReplicaNodeWaitForNodeInstallWaitHandle: !Ref SecondaryReplicaNode0WaitForNodeInstallWaitHandle
+      Tags:
+        - Key: "Department"
+          Value: !Ref Department
+        - Key: "Project"
+          Value: !Ref Project
+        - Key: "OwnerEmail"
+          Value: !Ref OwnerEmail
   SecondaryReplicaNode0WaitForNodeInstall:
     Type: 'AWS::CloudFormation::WaitCondition'
     Condition: CreateThreeReplicaSet
