@@ -404,13 +404,6 @@ Resources:
       Tier:
         Name: WebServer
         Type: Standard
-      Tags:
-        - Key: "Department"
-          Value: !Ref Department
-        - Key: "Project"
-          Value: !Ref Project
-        - Key: "OwnerEmail"
-          Value: !Ref OwnerEmail
   EC2ServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
