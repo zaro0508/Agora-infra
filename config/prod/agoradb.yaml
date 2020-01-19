@@ -7,6 +7,6 @@ parameters:
   Secondary0NodeSubnet: !stack_output_external computevpc::PrivateSubnet1
   Secondary1NodeSubnet: !stack_output_external computevpc::PrivateSubnet2
   BastionSecurityGroupID: !stack_output_external computevpc::VpnSecurityGroup
-  ClusterReplicaSetCount: '3'
+  ClusterReplicaSetCount: '1'
   MongoDBAdminPassword: !ssm /agora-prod/MongodbPassword
   NodeInstanceType: 'm5.large'
