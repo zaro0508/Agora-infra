@@ -13,7 +13,7 @@ parameters:
   EbRollingUpdateType: 'Immutable'
   SnsBounceNotificationEndpoint: 'agora-prod-bounce-notifications@sagebase.org'
   SnsNotificationEndpoint: 'agora-prod@sagebase.org'
-  EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.12.0 running Node.js'
+  EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.13.0 running Node.js'
   EC2InstanceType: 't2.medium'
   EC2KeyName: 'toptal'
   MongodbHost: !stack_output_external agoradb-prod::PrimaryReplicaNodeIp
