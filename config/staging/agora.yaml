@@ -11,7 +11,7 @@ parameters:
   EbHealthReportingSystem: 'enhanced'
   SnsBounceNotificationEndpoint: 'agora-staging-bounce-notifications@sagebase.org'
   SnsNotificationEndpoint: 'agora-staging@sagebase.org'
-  EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.5.4 running Node.js'
+  EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.13.0 running Node.js'
   EC2InstanceType: 't2.medium'
   EC2KeyName: 'toptal'
   MongodbHost: !stack_output_external agoradb-staging::PrimaryReplicaNodeIp
