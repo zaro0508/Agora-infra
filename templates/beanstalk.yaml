@@ -272,6 +272,9 @@ Resources:
         - Namespace: 'aws:autoscaling:launchconfiguration'
           OptionName: SecurityGroups
           Value: !Ref MongodbAccessSecurityGroup
+        - Namespace: 'aws:autoscaling:launchconfiguration'
+          OptionName: RootVolumeSize
+          Value: '32'
         - Namespace: 'aws:autoscaling:updatepolicy:rollingupdate'
           OptionName: RollingUpdateEnabled
           Value: 'true'
