@@ -16,8 +16,3 @@ parameters:
   KeyName: "toptal"
   # (Optional) ID of the base AMI (supported distros: AWS linux)
   AMIId: ami-003ed7eaef0321c8f     # AMI with mongo db tools
-
-   # Integration with our jumpcloud directory service (do not change)
-  JcConnectKey: !ssm /infra/JcConnectKey
-  JcServiceApiKey: !ssm /infra/JcServiceApiKey
-  JcSystemsGroupId: !ssm /infra/JcSystemsGroupId
