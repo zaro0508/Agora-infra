@@ -67,20 +67,16 @@ Resources:
         - DeleteOnTermination: true
           DeviceIndex: "0"
           GroupSet:
-              #Temporarily restict to quarantine SQ
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-${VpcName}-QuarantineSecurityGroup'
-              # Original SQ group follows
-#            - !ImportValue
-#              'Fn::Sub': '${AWS::Region}-${VpcName}-VpnSecurityGroup'
-#            - !ImportValue
-#              'Fn::Sub': '${AWS::Region}-${VpcName}-BastianSecurityGroup'
-#            - !ImportValue
-#              'Fn::Sub': '${AWS::Region}-agoradb-develop-MongoDBServerAccessSecurityGroup'
-#            - !ImportValue
-#              'Fn::Sub': '${AWS::Region}-agoradb-staging-MongoDBServerAccessSecurityGroup'
-#            - !ImportValue
-#              'Fn::Sub': '${AWS::Region}-agoradb-prod-MongoDBServerAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-${VpcName}-VpnSecurityGroup'
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-${VpcName}-BastianSecurityGroup'
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-agoradb-develop-MongoDBServerAccessSecurityGroup'
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-agoradb-staging-MongoDBServerAccessSecurityGroup'
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-agoradb-prod-MongoDBServerAccessSecurityGroup'
           SubnetId: !ImportValue
             'Fn::Sub': '${AWS::Region}-${VpcName}-${VpcSubnet}'
       Tags:
