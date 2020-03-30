@@ -1,0 +1,14 @@
+template_path: documentdb.yaml
+stack_name: agora-docdb-develop
+stack_tags:
+  Department: "Platform"
+  Project: "Infrastructure"
+  OwnerEmail: "it@sagebase.org"
+parameters:
+  Department: "Platform"
+  Project: "Infrastructure"
+  OwnerEmail: "it@sagebase.org"
+  VpcName: "computevpc"
+  MasterUser: "master"
+  MasterPassword: !ssm /agora-develop/MongodbPassword
+  DBInstanceClass: "db.r5.large"
