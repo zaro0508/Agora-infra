@@ -174,7 +174,7 @@ Resources:
           - !ImportValue us-east-1-agora-common-DNSDomainName
           - .
       Type: CNAME
-      TTL: '900'
+      TTL: 900
       ResourceRecords:
         - !GetAtt
           - BeanstalkEnvironment
