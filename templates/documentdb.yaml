@@ -86,15 +86,15 @@ Resources:
     Type: "AWS::DocDB::DBCluster"
     DeletionPolicy: Delete
     Properties:
-      BackupRetentionPeriod : 1
+#      BackupRetentionPeriod : 1
       MasterUsername: !Ref MasterUser
       MasterUserPassword: !Ref MasterPassword
       DBSubnetGroupName: !Ref DBSubnetGroup
       DBClusterParameterGroupName: !Ref DBParameterGroup
-      StorageEncrypted: false
+      StorageEncrypted: true
       PreferredMaintenanceWindow: "sat:06:54-sat:07:24"
       Port : 27017
-      PreferredBackupWindow : "07:34-08:04"
+#      PreferredBackupWindow : "07:34-08:04"
       VpcSecurityGroupIds:
         - !Ref DocumentDbAccessSecurityGroup
         - !Ref DocumentDbSecurityGroup
