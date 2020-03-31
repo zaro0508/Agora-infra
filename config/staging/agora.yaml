@@ -14,5 +14,5 @@ parameters:
   EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.13.0 running Node.js'
   EC2InstanceType: 't3.medium'
   EC2KeyName: 'toptal'
-  MongodbHost: !stack_output_external agoradb-staging::PrimaryReplicaNodeIp
-  MongodbAccessSecurityGroup: !stack_output_external agoradb-staging::MongoDBServerAccessSecurityGroup
+  MongodbHost: !stack_output_external agora-docdb-staging::ClusterEndpoint
+  MongodbAccessSecurityGroup: !stack_output_external agora-docdb-staging::DocumentDbAccessSecurityGroup
