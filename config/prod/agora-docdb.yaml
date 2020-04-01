@@ -8,4 +8,4 @@ parameters:
   VpcName: "computevpc"
   MasterUser: "master"
   MasterPassword: !ssm /agora-prod/MongodbPassword
-  DBInstanceClass: "db.r5.xlarge"
+  DBInstanceClass: "db.r5.large"
