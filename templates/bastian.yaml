@@ -61,8 +61,6 @@ Resources:
       ImageId: !Ref AMIId
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyName
-      IamInstanceProfile: !ImportValue
-        'Fn::Sub': '${AWS::Region}-agora-develop-InstanceProfile'
       NetworkInterfaces:
         - DeleteOnTermination: true
           DeviceIndex: "0"
