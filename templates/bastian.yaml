@@ -70,11 +70,11 @@ Resources:
             - !ImportValue
               'Fn::Sub': '${AWS::Region}-${VpcName}-BastianSecurityGroup'
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-agora-docdb-develop-DocumentDbAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-agoradb-develop-MongoDBServerAccessSecurityGroup'
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-agora-docdb-staging-DocumentDbAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-agoradb-staging-MongoDBServerAccessSecurityGroup'
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-agora-docdb-prod-DocumentDbAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-agoradb-prod-MongoDBServerAccessSecurityGroup'
           SubnetId: !ImportValue
             'Fn::Sub': '${AWS::Region}-${VpcName}-${VpcSubnet}'
       Tags:
