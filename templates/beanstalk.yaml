@@ -308,10 +308,10 @@ Resources:
         - Namespace: 'aws:elbv2:loadbalancer'
           OptionName: AccessLogsS3Enabled
           Value: 'true'
-        # use manually generated SSL certificate '*.ampadportal.org'
+        # use manually generated SSL certificate '*.adknowledgeportal.org'
         - Namespace: 'aws:elbv2:listener:443'
           OptionName: SSLCertificateArns
-          Value: 'arn:aws:acm:us-east-1:055273631518:certificate/412c0ea4-8123-48dd-b0af-608558cbb902'
+          Value: 'arn:aws:acm:us-east-1:055273631518:certificate/af3dd144-7306-4c35-a514-2b36cbdefd08'
         - Namespace: 'aws:elbv2:listener:443'
           OptionName: Protocol
           Value: HTTPS
