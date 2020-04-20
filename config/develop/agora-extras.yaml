@@ -1,5 +1,5 @@
 template_path: beanstalk-extras.yaml
-stack_name: agora-develop-extras.yaml
+stack_name: agora-develop-extras
 dependencies:
   - develop/agora.yaml
 parameters:
