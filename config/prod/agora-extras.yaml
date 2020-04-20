@@ -1,0 +1,7 @@
+template_path: beanstalk-extras.yaml
+stack_name: agora-prod-extras.yaml
+dependencies:
+  - prod/agora.yaml
+parameters:
+  ListenerArn: "arn:aws:elasticloadbalancing:us-east-1:055273631518:loadbalancer/app/awseb-AWSEB-1AEIEZ8KICCU3/f27722898ec2b53f"
+  CertificateArn: "arn:aws:acm:us-east-1:055273631518:certificate/412c0ea4-8123-48dd-b0af-608558cbb902"   # *.ampadportal.org
