@@ -1,0 +1,10 @@
+template_path: "notifications.yaml"
+stack_name: "agora-notifications"
+stack_tags:
+  Department: "Platform"
+  Project: "Infrastructure"
+  OwnerEmail: "it@sagebase.org"
+dependencies:
+  - "prod/lambda-mongo-health-check.yaml"
+parameters:
+  NotificationEndpoint: "agora-prod@sagebase.org"
