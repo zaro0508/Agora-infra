@@ -234,6 +234,9 @@ Parameters:
       - t3.large
       - t3.xlarge
       - t3.2xlarge
+  VpcName:
+    Type: String
+    Description: The VPC for this application
   VPC:
     Type: 'AWS::EC2::VPC::Id'
     Description: >-
