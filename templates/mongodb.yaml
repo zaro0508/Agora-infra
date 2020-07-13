@@ -285,6 +285,11 @@ Resources:
           FromPort: 28017
           ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !ImportValue
+            'Fn::Sub': '${AWS::Region}-${VpcName}-VpnSecurityGroup'
   MongoDBServersSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
