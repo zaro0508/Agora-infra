@@ -234,9 +234,11 @@ Parameters:
       - t3.large
       - t3.xlarge
       - t3.2xlarge
-  VpcName:
+  VpnCidr:
+    Description: The Sage VPN CIDR (i.e. 10.1.0.0/16)
     Type: String
-    Description: The VPC for this application
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
   VPC:
     Type: 'AWS::EC2::VPC::Id'
     Description: >-
@@ -288,11 +290,11 @@ Resources:
           FromPort: 28017
           ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          SourceSecurityGroupId: !ImportValue
-            'Fn::Sub': '${AWS::Region}-${VpcName}-VpnSecurityGroup'
+        - CidrIp: !Ref VpnCidr
+          FromPort: -1
+          ToPort: -1
+          IpProtocol: "-1"
+          Description: "Allow all VPN traffic"
   MongoDBServersSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
