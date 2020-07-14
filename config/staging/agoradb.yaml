@@ -11,7 +11,7 @@ parameters:
   PrimaryNodeSubnet: !stack_output_external computevpc::PrivateSubnet
   Secondary0NodeSubnet: !stack_output_external computevpc::PrivateSubnet1
   Secondary1NodeSubnet: !stack_output_external computevpc::PrivateSubnet2
-  BastionSecurityGroupID: !stack_output_external computevpc::VpnSecurityGroup
+  BastionSecurityGroupID: !stack_output_external computevpc::BastianSecurityGroup
   ClusterReplicaSetCount: '1'
   MongoDBAdminPassword: !ssm /agora-staging/MongodbPassword
   NodeInstanceType: 'm5.large'
