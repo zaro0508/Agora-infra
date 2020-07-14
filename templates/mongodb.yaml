@@ -234,6 +234,9 @@ Parameters:
       - t3.large
       - t3.xlarge
       - t3.2xlarge
+  VpcName:
+    Type: String
+    Description: The VPC for this application
   VPC:
     Type: 'AWS::EC2::VPC::Id'
     Description: >-
@@ -285,6 +288,11 @@ Resources:
           FromPort: 28017
           ToPort: 28017
           SourceSecurityGroupId: !Ref MongoDBServerAccessSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !ImportValue
+            'Fn::Sub': '${AWS::Region}-${VpcName}-VpnSecurityGroup'
   MongoDBServersSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
