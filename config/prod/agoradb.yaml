@@ -6,7 +6,7 @@ stack_tags:
   OwnerEmail: "it@sagebase.org"
 parameters:
   KeyPairName: 'agora-access'
-  VpcName: 'computevpc'
+  VpnCidr: !stack_output_external computevpc::VpnCidr
   VPC: !stack_output_external computevpc::VPCId
   PrimaryNodeSubnet: !stack_output_external computevpc::PrivateSubnet
   Secondary0NodeSubnet: !stack_output_external computevpc::PrivateSubnet1
