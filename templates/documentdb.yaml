@@ -79,7 +79,10 @@ Resources:
       Family: "docdb3.6"
       Parameters:
         audit_logs: "disabled"
-        profiler: "disabled"
+        profiler: "enabled"
+        profiler_sampling_rate: "1.0"
+        profiler_threshold_ms: "100"
+        change_stream_log_retention_duration: "10800"
         tls: "disabled"
         ttl_monitor: "disabled"
   DBCluster:
@@ -93,6 +96,8 @@ Resources:
       StorageEncrypted: true
       PreferredMaintenanceWindow: "sat:06:54-sat:07:24"
       Port : 27017
+      EnableCloudwatchLogsExports:
+        - "profiler"
       VpcSecurityGroupIds:
         - !Ref DocumentDbAccessSecurityGroup
         - !Ref DocumentDbSecurityGroup
