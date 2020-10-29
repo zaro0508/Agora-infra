@@ -4,8 +4,6 @@ stack_tags:
   Department: "Platform"
   Project: "Infrastructure"
   OwnerEmail: "it@sagebase.org"
-dependencies:
-  - "prod/agoradb.yaml"
 hooks:
   before_launch:
     - !cmd "curl https://{{stack_group_config.admincentral_cf_bucket}}.s3.amazonaws.com/lambda-mongo-health-check/master/lambda-mongo-health-check.yaml --create-dirs -o templates/remote/lambda-mongo-health-check.yaml"
