@@ -71,9 +71,9 @@ Resources:
             - !ImportValue
               'Fn::Sub': '${AWS::Region}-${VpcName}-BastianSecurityGroup'
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-agoradb-develop-DocumentDbAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-agora-docdb-develop-DocumentDbAccessSecurityGroup'
             - !ImportValue
-              'Fn::Sub': '${AWS::Region}-agoradb-staging-DocumentDbAccessSecurityGroup'
+              'Fn::Sub': '${AWS::Region}-agora-docdb-staging-DocumentDbAccessSecurityGroup'
 #            - !ImportValue
 #              'Fn::Sub': '${AWS::Region}-agoradb-prod-DocumentDbAccessSecurityGroup'
           SubnetId: !ImportValue
