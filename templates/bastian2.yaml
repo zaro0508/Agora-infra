@@ -76,6 +76,11 @@ Resources:
               'Fn::Sub': '${AWS::Region}-agora-docdb-staging-DocumentDbAccessSecurityGroup'
 #            - !ImportValue
 #              'Fn::Sub': '${AWS::Region}-agoradb-prod-DocumentDbAccessSecurityGroup'
+            # allow using this bastian to temporarily access the Mongo DBs
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-agoradb-develop-MongoDBServerAccessSecurityGroup'
+            - !ImportValue
+              'Fn::Sub': '${AWS::Region}-agoradb-staging-MongoDBServerAccessSecurityGroup'
           SubnetId: !ImportValue
             'Fn::Sub': '${AWS::Region}-${VpcName}-${VpcSubnet}'
       Tags:
