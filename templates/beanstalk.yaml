@@ -298,7 +298,7 @@ Resources:
           Value: !Ref EbDeploymentPolicy
         - Namespace: 'aws:elasticbeanstalk:command'
           OptionName: Timeout
-          Value: '1000'
+          Value: !Ref BeanstalkDeployTimeout
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: ServiceRole
           Value: !ImportValue us-east-1-agora-common-BeanstalkServiceRole
