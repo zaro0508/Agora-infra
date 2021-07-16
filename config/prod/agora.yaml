@@ -17,4 +17,3 @@ parameters:
   MongodbHost: !stack_output_external agoradb-prod::PrimaryReplicaNodeIp
   MongodbAccessSecurityGroup: !stack_output_external agoradb-prod::MongoDBServerAccessSecurityGroup
   BeanstalkDeployTimeout: '1000'
-  
