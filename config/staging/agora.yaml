@@ -7,6 +7,7 @@ parameters:
   AutoScalingMaxSize: '4'
   AutoScalingMinSize: '2'
   EbHealthReportingSystem: 'enhanced'
+  EbDeploymentPolicy: 'RollingWithAdditionalBatch'
   SnsBounceNotificationEndpoint: 'agora-staging-bounce-notifications@sagebase.org'
   SnsNotificationEndpoint: 'agora-staging@sagebase.org'
   EbSolutionStackName: '64bit Amazon Linux 2018.03 v4.13.0 running Node.js'
