@@ -27,4 +27,4 @@ Resources:
             Values:
               - !Ref RedirectFromHost
       ListenerArn: !Ref ListernerArn
-      Priority: 1
+      Priority: 25000
