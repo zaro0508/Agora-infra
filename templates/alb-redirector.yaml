@@ -7,7 +7,7 @@ Parameters:
   RedirectToHost:
     Description: The host name we want to redirect to
     Type: String
-  ListernerArn:
+  ListenerArn:
     Description: The ARN of the listener this redirect rule should be applied to
     Type: String
 Resources:
@@ -26,5 +26,5 @@ Resources:
           HostHeaderConfig:
             Values:
               - !Ref RedirectFromHost
-      ListenerArn: !Ref ListernerArn
+      ListenerArn: !Ref ListenerArn
       Priority: 25000
