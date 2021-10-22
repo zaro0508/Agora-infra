@@ -22,9 +22,8 @@ Resources:
             Host: !Ref RedirectToHost
             StatusCode: "HTTP_302"
       Conditions:
-        - Field: "host-header"
-          HostHeaderConfig:
-            Values:
-              - !Ref RedirectFromHost
+        - Field: host-header
+          Values:
+            - !Ref RedirectFromHost
       ListenerArn: !Ref ListenerArn
       Priority: 25000
