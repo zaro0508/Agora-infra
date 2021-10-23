@@ -15,7 +15,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
-        - Type: Redirect
+        - Type: redirect
           RedirectConfig:
             Protocol: "HTTPS"
             Port: "443"
@@ -23,7 +23,8 @@ Resources:
             StatusCode: "HTTP_302"
       Conditions:
         - Field: host-header
-          Values:
-            - !Ref RedirectFromHost
+          HostHeaderConfig:
+            Values:
+              - !Ref RedirectFromHost
       ListenerArn: !Ref ListenerArn
       Priority: 25000
