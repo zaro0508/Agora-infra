@@ -1,5 +1,7 @@
 # Provision a S3 static under maintenance website for agora
-template_path: remote/managed-s3WebCloudfront.yaml
+template:
+  type: http
+  url: https://{{stack_group_config.admincentral_cf_bucket}}.s3.amazonaws.com/aws-infra/v0.3.3/managed-s3WebCloudfront.yaml
 stack_name: agora-maintenance-website
 parameters:
   # The department for this resource (i.e. CompOnc, SysBio, Platform, etc..)
@@ -14,7 +16,3 @@ parameters:
   SubDomainName: "maintenance"
   # The Amazon Resource Name (ARN) of an AWS Certificate Manager (ACM) certificate
   AcmCertificateArn: "arn:aws:acm:us-east-1:055273631518:certificate/412c0ea4-8123-48dd-b0af-608558cbb902"
-
-hooks:
-  before_launch:
-    - !cmd "curl https://{{stack_group_config.admincentral_cf_bucket}}.s3.amazonaws.com/aws-infra/master/managed-s3WebCloudfront.yaml --create-dirs -o templates/remote/managed-s3WebCloudfront.yaml"
