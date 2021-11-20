@@ -1,4 +1,5 @@
-template_path: alb-redirector.yaml
+template:
+  path: alb-redirector.yaml
 stack_name: agora-dev-alb-redirector
 dependencies:
   - develop/agora.yaml
