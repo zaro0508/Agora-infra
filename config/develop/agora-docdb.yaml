@@ -1,4 +1,5 @@
-template_path: documentdb.yaml
+template:
+  path: documentdb.yaml
 stack_name: agora-docdb-develop
 stack_tags:
   Department: "Platform"

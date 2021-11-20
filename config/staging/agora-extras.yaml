@@ -1,4 +1,5 @@
-template_path: beanstalk-extras.yaml
+template:
+  path: beanstalk-extras.yaml
 stack_name: agora-staging-extras
 dependencies:
   - staging/agora.yaml

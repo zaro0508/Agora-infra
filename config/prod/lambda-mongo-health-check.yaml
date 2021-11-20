@@ -1,4 +1,5 @@
-template_path: "remote/lambda-mongo-health-check.yaml"
+template:
+  path: "remote/lambda-mongo-health-check.yaml"
 stack_name: "agora-lambda-mongo-health-check"
 stack_tags:
   Department: "Platform"

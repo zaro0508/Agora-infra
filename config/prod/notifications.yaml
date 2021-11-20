@@ -1,4 +1,5 @@
-template_path: "notifications.yaml"
+template:
+  path: "notifications.yaml"
 stack_name: "agora-prod-notifications"
 stack_tags:
   Department: "Platform"

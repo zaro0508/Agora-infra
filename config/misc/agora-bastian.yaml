@@ -1,5 +1,6 @@
 # Provision an EC2 bastian host for agora
-template_path: bastian.yaml
+template:
+  path: bastian.yaml
 stack_name: agora-bastian
 parameters:
   # The Sage deparment for this resource

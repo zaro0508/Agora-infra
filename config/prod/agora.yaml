@@ -1,4 +1,5 @@
-template_path: beanstalk.yaml
+template:
+  path: beanstalk.yaml
 stack_name: agora-prod
 parameters:
   AppDeployBucket: 'org-sagebionetworks-agora-deployment-agora-prod'
