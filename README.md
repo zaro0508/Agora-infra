@@ -38,9 +38,9 @@ We have configured Travis to deploy CF template updates.  Travis deploys using
 # AWS Infrastructure
 We setup Agora application to run in AWS Elastic Beanstalk.  The beanstalk
 is setup to run Agora in three environments:
-* Development -> https://agora-develop.ampadportal.org
-* Staging -> https://agora-staging.ampadportal.org
-* Production -> https://agora.ampadportal.org
+* Development -> https://agora-develop.adknowledgeportal.org
+* Staging -> https://agora-staging.adknowledgeportal.org
+* Production -> https://agora.adknowledgeportal.org
 
 ## Deployment Workflow
 To deploy Agora updates to one of the environments just merge code to the branch you would like
